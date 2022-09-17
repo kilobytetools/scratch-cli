@@ -337,7 +337,9 @@ pub fn try_get_args() -> Result<Args, ErrorKind> {
     match &subcommand_name {
         Some(name) => match name {
             CommandName::Push => {
-                if push_args.input.is_none() {
+                if push_args.input.is_none() && !help {
+                    // don't read from stdin when the user is asking for help
+                    // with `scratch push --help`
                     push_args.input = Some(util::InputMode::from_stdin()?);
                 }
                 push_args.pw = pw;
