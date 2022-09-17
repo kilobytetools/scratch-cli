@@ -333,8 +333,32 @@ pub fn try_get_args() -> Result<Args, ErrorKind> {
         },
     }
 
-    if subcommand_name.is_none() {
-        help = true;
+    // set defaults, move subcommand args
+    match &subcommand_name {
+        Some(name) => match name {
+            CommandName::Push => {
+                if push_args.input.is_none() {
+                    push_args.input = Some(util::InputMode::from_stdin()?);
+                }
+                push_args.pw = pw;
+                command = Some(Command::Push(push_args));
+            }
+            CommandName::Pull => {
+                pull_args.pw = pw;
+                if let Some(true) = pull_args.anon {
+                    // unset api_key when --anon
+                    opts.api_key = None;
+                }
+                command = Some(Command::Pull(pull_args))
+            }
+            CommandName::List => command = Some(Command::List),
+            CommandName::Delete => command = Some(Command::Delete(delete_args)),
+            CommandName::Stats => command = Some(Command::Stats),
+            CommandName::Bootstrap => command = Some(Command::Bootstrap(bootstrap_args)),
+        },
+        _ => {
+            help = true;
+        }
     }
 
     if help {
@@ -352,32 +376,6 @@ pub fn try_get_args() -> Result<Args, ErrorKind> {
             None => HELP,
         };
         command = Some(Command::Help(msg));
-    } else {
-        // set defaults, move subcommand args
-        match &subcommand_name {
-            Some(name) => match name {
-                CommandName::Push => {
-                    if push_args.input.is_none() {
-                        push_args.input = Some(util::InputMode::from_stdin()?);
-                    }
-                    push_args.pw = pw;
-                    command = Some(Command::Push(push_args));
-                }
-                CommandName::Pull => {
-                    pull_args.pw = pw;
-                    if let Some(true) = pull_args.anon {
-                        // unset api_key when --anon
-                        opts.api_key = None;
-                    }
-                    command = Some(Command::Pull(pull_args))
-                }
-                CommandName::List => command = Some(Command::List),
-                CommandName::Delete => command = Some(Command::Delete(delete_args)),
-                CommandName::Stats => command = Some(Command::Stats),
-                CommandName::Bootstrap => command = Some(Command::Bootstrap(bootstrap_args)),
-            },
-            _ => {}
-        }
     }
     let args = Args { opts, command };
     if !help {
