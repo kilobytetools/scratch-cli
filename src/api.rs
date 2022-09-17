@@ -223,7 +223,7 @@ impl ResponseBodyHelpers for Response {
 
 pub fn push<R>(args: PushArgs, opts: ClientOpts, report_id: R) -> Result<String, ErrorKind>
 where
-    R: Fn(&String) -> (),
+    R: FnOnce(&String) -> (),
 {
     let created_id: String;
     let resp_text: String;

@@ -35,13 +35,18 @@ fn main() {
     match command {
         Help(msg) => print_help(msg),
         Push(push) => {
-            fn report_id(id: &String) {
-                println!("{}", id.trim());
+            let endpoint = blind(args.opts.endpoint);
+            let render_prefix = match push.render_url {
+                true => format!("{}/scratch/file/", endpoint),
+                false => "".into(),
+            };
+            let report_id = |id: &String| {
+                println!("{}{}", render_prefix, id.trim());
                 let _ = io::stdout().flush();
-            }
+            };
             let args = PushArgs::new(
                 blind(args.opts.api_key),
-                blind(args.opts.endpoint),
+                endpoint,
                 blind(push.input),
                 push.burn,
                 push.private,

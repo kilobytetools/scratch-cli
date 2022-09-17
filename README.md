@@ -20,13 +20,16 @@ prod$ scratch pull 97a292d7 > ~/.aws/credentials
 
 Of course, you can copy your init script the same way:
 
-```
-local$ scratch push --lifetime=5m < bootstrap/init.sh
-128b1cc0
+```sh
+local$ scratch push --no-private --lifetime 5m --url < bootstrap/init.sh
+https://2e7e3b91.kilobytetools.io/scratch/file/128b1cc0
 
-prod$ scratch pull > init.sh
+
+# using raw url
+prod$ curl https://2e7e3b91.kilobytetools.io/scratch/file/128b1cc0 > init.sh
 prod$ ./init.sh
 
+# using latest pushed
 backup$ scratch pull > init.sh
 backup$ ./init.sh
 ```

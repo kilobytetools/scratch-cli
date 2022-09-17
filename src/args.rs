@@ -47,10 +47,14 @@ OPTIONS:
     --prefix PREFIX         Optional prefix for the random file key.
                             Useful for segmenting temporary files by use.
                             Format: [a-zA-Z0-9._-:|]{1,64}
+    --url                   Prints out the complete file url, not just the id.
+                            Useful when pushing public data to access without
+                            a scratch client.
 
 EXAMPLES:
     scratch push --lifetime 2h < ~/.ssh/id_rsa.pub
     scratch push --burn --prefix creds.aws: --file ~/.aws/config
+    scratch push --no-private --url <<< "hello, world"
 "#;
 
 const PULL_HELP: &str = r#"
@@ -224,6 +228,7 @@ pub struct PushArgs {
     pub burn: Option<bool>,
     pub prefix: Option<util::Prefix>,
     pub input: Option<util::InputMode>,
+    pub render_url: bool,
 }
 
 #[derive(Default)]
@@ -250,6 +255,7 @@ pub fn try_get_args() -> Result<Args, ErrorKind> {
     let mut command = None;
     let mut subcommand_name: Option<CommandName> = None;
 
+    let mut render_url = false;
     let mut pw = None;
     let mut push_args = PushArgs::default();
     let mut pull_args = PullArgs::default();
@@ -287,6 +293,9 @@ pub fn try_get_args() -> Result<Args, ErrorKind> {
 
             Long("stdout") => bootstrap_args.stdout = true,
             Long("no-stdout") => bootstrap_args.stdout = false,
+
+            Long("url") => render_url = true,
+            Long("no-url") => render_url = false,
 
             Value(subcommand) if subcommand_name.is_none() => {
                 if subcommand == "help" {
@@ -343,6 +352,7 @@ pub fn try_get_args() -> Result<Args, ErrorKind> {
                     push_args.input = Some(util::InputMode::from_stdin()?);
                 }
                 push_args.pw = pw;
+                push_args.render_url = render_url;
                 command = Some(Command::Push(push_args));
             }
             CommandName::Pull => {
