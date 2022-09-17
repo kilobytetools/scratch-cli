@@ -14,12 +14,15 @@ jobs:
         - name: Linux x86_64
           os: ubuntu-latest
           target: x86_64-unknown-linux-gnu
+          suffix:
         - name: macOS x86_64
           os: macos-latest
           target: x86_64-apple-darwin
+          suffix:
         - name: Windows x86_64
           os: windows-latest
           target: x86_64-pc-windows-msvc
+          suffix: .exe
     name: Build ${{ matrix.name }}
     steps:
       - uses: actions/checkout@v3
@@ -30,6 +33,6 @@ jobs:
         name: build
       - uses: actions/upload-artifact@v3
         with:
-          name: scratch-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/scratch
+          name: scratch-${{ matrix.target }}${{ matrix.suffix }}
+          path: target/${{ matrix.target }}/release/scratch${{ matrix.suffix }}
           retention-days: 1
