@@ -37,15 +37,16 @@ generated ID entirely.  `scratch pull` defaults to the latest pushed file (as in
 
 ## Installation
 
-The cli is written in rust and compiled through a
-[github action](https://github.com/kilobytetools/scratch-cli/blob/main/.github/workflows/build.yml).
-The [stable](https://github.com/numberoverzero/rook/releases/tag/stable) release contains binaries for three targets:
+You can download a compiled binary [here](https://github.com/kilobytetools/scratch-cli/releases/tag/stable).  Each
+stable release is built for three target platforms:
 
 * `x86_64-unknown-linux-gnu` (linux 64bit)
 * `x86_64-apple-darwin` (mac 64bit)
 * `x86_64-pc-windows-msvc` (windows 64bit)
 
-Download the appropriate binary for your system.  The following examples assume you save the executable as `scratch`.
+You can also [compile from source](#compiling-from-source) which is based on the steps in
+[this github action](https://github.com/kilobytetools/scratch-cli/blob/main/.github/workflows/build.yml).
+
 
 ## Setup
 
@@ -61,6 +62,7 @@ Enter your password:
 $ scratch stats --out-format json
 {"max_bytes": 94371840, "max_files": 1024, "used_bytes": 0, "used_files": 0}
 ```
+
 
 ## Usage
 
@@ -88,6 +90,7 @@ COMMAND:
     stats       Get usage stats for your account
     bootstrap   Create a valid config file
 ```
+
 
 ## Flags and Defaults
 
@@ -133,6 +136,7 @@ Because last flag wins, the following will set `--burn`:
 ```sh
 $ scratch push --burn --public --no-burn --lifetime 5m --burn < Dockerfile
 ```
+
 
 ## Compiling from source
 
