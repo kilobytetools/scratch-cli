@@ -1,0 +1,22 @@
+[package]
+name = "scratch"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+base64 = "0.13.0"
+dirs-next = "2.0.0"
+lazy_static = "1.4.0"
+lexopt = "0.2.1"
+regex = "1.6.0"
+rpassword = "7.0.0"
+serde = { version = "1.0", default_features = false, features = ["derive"] }
+toml = { version = "0.5" }
+ureq = "2.5.0"
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "z"
+panic = "abort"
+strip = true
